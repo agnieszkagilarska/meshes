@@ -38,4 +38,6 @@ public class Triangle {
     public Point getp3() {
         return p3;
     }
+
+
 }

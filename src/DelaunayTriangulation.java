@@ -46,20 +46,25 @@ public class DelaunayTriangulation {
     }
 
     private void removeCommonEdges(List<Edge> newEdges) {
-        for (int i = 0; i < newEdges.size() - 1; i++) {
-            Edge edge1 = newEdges.get(i);
+        List<Edge> uniqueEdges = new ArrayList<>();
 
-            for (int j = i + 1; j < newEdges.size(); j++) {
-                Edge edge2 = newEdges.get(j);
+        for (Edge edge : newEdges) {
+            boolean isDuplicate = false;
 
-                if (edge1.isCommon(edge2)) {
-                    newEdges.remove(j);
-                    newEdges.remove(i);
-                    i--;
+            for (Edge uniqueEdge : uniqueEdges) {
+                if (edge.isCommon(uniqueEdge)) {
+                    isDuplicate = true;
                     break;
                 }
             }
+
+            if (!isDuplicate) {
+                uniqueEdges.add(edge);
+            }
         }
+
+        newEdges.clear();
+        newEdges.addAll(uniqueEdges);
     }
 
     public List<Point> getPoints() {

@@ -21,7 +21,7 @@ public class TriangleDrawer {
             int[] yPoints = { (int) Math.round(p1.getY()), (int) Math.round(p2.getY()), (int) Math.round(p3.getY()) };
 
             g2d.drawPolygon(xPoints, yPoints, 3);
-            g2d.fillPolygon(xPoints, yPoints, 3);
+            //g2d.fillPolygon(xPoints, yPoints, 3);
         }
 
         g2d.dispose();
