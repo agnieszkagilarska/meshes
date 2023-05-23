@@ -36,7 +36,7 @@ public class DelaunayTriangulation {
             }
 
             // Usuń wspólne krawędzie
-            removeCommonEdges(newEdges);
+            //removeCommonEdges(newEdges);
 
             // Dodaj nowe trójkąty utworzone przez nowe krawędzie
             for (Edge edge : newEdges) {

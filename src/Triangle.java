@@ -9,6 +9,9 @@ public class Triangle {
         this.p3 = p3;
     }
 
+    public Triangle(Point startPoint) {
+    }
+
     public boolean isInsideCircumcircle(Point point) {
         double ax = p1.getX() - point.getX();
         double ay = p1.getY() - point.getY();
