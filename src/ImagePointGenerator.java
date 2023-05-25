@@ -8,13 +8,11 @@ import java.util.List;
 
 public class ImagePointGenerator {
     private static final int BLACK_COLOR = Color.BLACK.getRGB();
-    private static final int WHITE_COLOR = Color.WHITE.getRGB();
 
-    public static List<D.Vertex> generatePointsFromImage(String imagePath, int step) {
-        List<D.Vertex> points = new ArrayList<>();
+    public static List<Vertex> generatePointsFromImage(String imagePath, int step) {
+        List<Vertex> points = new ArrayList<>();
 
         try {
-            // Wczytanie obrazu z pliku PNG
             BufferedImage image = ImageIO.read(new File(imagePath));
 
             int width = image.getWidth();
@@ -27,34 +25,27 @@ public class ImagePointGenerator {
                     if (image.getRGB(x, y) == BLACK_COLOR) {
                         // Sprawdzenie czy piksel jest na granicy kształtu
                         if (isBoundaryPixel(image, x, y)) {
-                            // Dodanie punktu do listy
-                            points.add(new D.Vertex(x, y));
-                        } else {
-                            // Dodanie punktów wewnątrz czarnego obszaru z większym odstępem
-                            if (x % (step ) == 0 && y % (step ) == 0) {
-                                points.add(new D.Vertex(x, y));
+                            if (x % step == 0 && y % step == 0) {
+                                points.add(new Vertex(x, y));
                             }
                         }
-                    } else if (image.getRGB(x, y) == WHITE_COLOR) {
-                        // Dodanie punktów na białym tle z mniejszym odstępem
-                        if (x % (step / 2) == 0 && y % (step / 2) == 0) {
-                            points.add(new D.Vertex(x, y));
+                        if (x % step == 0 && y % step == 0) {
+                            points.add(new Vertex(x, y));
                         }
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return points;
+            return points;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static boolean isBoundaryPixel(BufferedImage image, int x, int y) {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        // Sprawdzenie czy przynajmniej jeden z sąsiadujących pikseli nie jest czarny
         if (x > 0 && image.getRGB(x - 1, y) != BLACK_COLOR) {
             return true;
         }

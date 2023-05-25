@@ -1,26 +1,17 @@
 public class Edge {
-        private Point start;
-        private Point end;
+    public Vertex v0;
+    public Vertex v1;
 
-        public Edge(Point start, Point end) {
-            this.start = start;
-            this.end = end;
-        }
-
-        public boolean isCommon(Edge other) {
-            if (start.equals(other.start) || start.equals(other.end)
-                    || end.equals(other.start) || end.equals(other.end)) {
-                return true;
-            }
-            return false;
-        }
-
-    public Point getStart() {
-        return start;
+    public Edge(Vertex v0, Vertex v1) {
+        this.v0 = v0;
+        this.v1 = v1;
     }
 
-    public Point getEnd() {
-        return end;
+    public boolean equals(Edge other) {
+        return (this.v0 == other.v0 && this.v1 == other.v1);
+    }
+
+    public Edge inverse() {
+        return new Edge(this.v1, this.v0);
     }
 }
-

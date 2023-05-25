@@ -1,74 +1,67 @@
 public class Triangle {
-    private Point p1;
-    private Point p2;
-    private Point p3;
+    public Vertex v0;
+    public Vertex v1;
+    public Vertex v2;
+    public Vertex center;
+    public double radius_squared;
+    public double radius;
+    private static final double EPSILON = 1.0e-6;
 
-    public Triangle(Point p1, Point p2, Point p3) {
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
+    public Triangle(Vertex v0, Vertex v1, Vertex v2) {
+        this.v0 = v0;
+        this.v1 = v1;
+        this.v2 = v2;
+
+        this.calcCircumcircle();
     }
 
-    public Triangle(Point startPoint) {
-    }
+    private void calcCircumcircle() {
+        // From: http://www.exaflop.org/docs/cgafaq/cga1.html
 
-//    public boolean isPointInside(Point point) {
-//        double denominator = ((p2.getY() - p3.getY()) * (p1.getX() - p3.getX()) +
-//                (p3.getX() - p2.getX()) * (p1.getY() - p3.getY()));
-//
-//        double a = ((p2.getY() - p3.getY()) * (point.getX() - p3.getX()) +
-//                (p3.getX() - p2.getX()) * (point.getY() - p3.getY())) / denominator;
-//
-//        double b = ((p3.getY() - p1.getY()) * (point.getX() - p3.getX()) +
-//                (p1.getX() - p3.getX()) * (point.getY() - p3.getY())) / denominator;
-//
-//        double c = 1.0 - a - b;
-//
-//        return (a >= 0 && b >= 0 && c >= 0);
-//    }
-public boolean isPointInside(Point point) {
-    double d1 = sign(point, p1, p2);
-    double d2 = sign(point, p2, p3);
-    double d3 = sign(point, p3, p1);
+        double A = this.v1.x - this.v0.x;
+        double B = this.v1.y - this.v0.y;
+        double C = this.v2.x - this.v0.x;
+        double D = this.v2.y - this.v0.y;
 
-    boolean hasNegative = (d1 < 0) || (d2 < 0) || (d3 < 0);
-    boolean hasPositive = (d1 > 0) || (d2 > 0) || (d3 > 0);
+        double E = A * (this.v0.x + this.v1.x) + B * (this.v0.y + this.v1.y);
+        double F = C * (this.v0.x + this.v2.x) + D * (this.v0.y + this.v2.y);
 
-    return !(hasNegative && hasPositive);
-}
+        double G = 2.0 * (A * (this.v2.y - this.v1.y) - B * (this.v2.x - this.v1.x));
 
-    private double sign(Point p1, Point p2, Point p3) {
-        return (p1.getX() - p3.getX()) * (p2.getY() - p3.getY()) - (p2.getX() - p3.getX()) * (p1.getY() - p3.getY());
-    }
+        double dx, dy;
 
-    public boolean isInsideCircumcircle(Point point) {
-        double ax = p1.getX() - point.getX();
-        double ay = p1.getY() - point.getY();
-        double bx = p2.getX() - point.getX();
-        double by = p2.getY() - point.getY();
-        double cx = p3.getX() - point.getX();
-        double cy = p3.getY() - point.getY();
+        if (Math.abs(G) < EPSILON) {
+            // Collinear - find extremes and use the midpoint
 
-        double d = (ax * (by - cy)) - (bx * (ay - cy)) + (cx * (ay - by));
-        if (d > 0) {
-            return true;
+            double minx = Math.min(this.v0.x, Math.min(this.v1.x, this.v2.x));
+            double miny = Math.min(this.v0.y, Math.min(this.v1.y, this.v2.y));
+            double maxx = Math.max(this.v0.x, Math.max(this.v1.x, this.v2.x));
+            double maxy = Math.max(this.v0.y, Math.max(this.v1.y, this.v2.y));
+
+            this.center = new Vertex((minx + maxx) / 2, (miny + maxy) / 2);
+
+            dx = this.center.x - minx;
+            dy = this.center.y - miny;
+        } else {
+            double cx = (D * E - B * F) / G;
+            double cy = (A * F - C * E) / G;
+
+            this.center = new Vertex(cx, cy);
+
+            dx = this.center.x - this.v0.x;
+            dy = this.center.y - this.v0.y;
         }
-        return false;
-    }
-    public boolean hasVertex(Point point) {
-        return p1.equals(point) || p2.equals(point) || p3.equals(point);
+
+        this.radius_squared = dx * dx + dy * dy;
+        this.radius = Math.sqrt(this.radius_squared);
     }
 
-    public Point getp1() {
-        return p1;
-    }
+    public boolean inCircumcircle(Vertex v) {
+        double dx = this.center.x - v.x;
+        double dy = this.center.y - v.y;
+        double dist_squared = dx * dx + dy * dy;
 
-    public Point getp2() {
-        return p2;
-    }
-
-    public Point getp3() {
-        return p3;
+        return (dist_squared <= this.radius_squared);
     }
 
 

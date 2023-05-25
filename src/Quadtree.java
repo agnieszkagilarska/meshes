@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 
 public class Quadtree {
 
-    private static final int MIN_QUADRANT_SIZE = 15;
+    private static final int MIN_QUADRANT_SIZE = 10;
 
     private BufferedImage image;
     private Node root;
