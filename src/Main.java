@@ -19,27 +19,10 @@ public class Main {
             e.printStackTrace();
         }
         String imagePath = "image3.png";
-        int step = 50;
-        List<Point> points = ImagePointGenerator.generatePointsFromImage(imagePath, step);
-//        Point p1 = new Point(0, 25);
-//        Point p2 = new Point(50, 0);
-//        Point p3 = new Point(0, 50);
-//        Point p4 = new Point(6, 4);
-//        Point p5 = new Point(8, 6);
+        int step = 300;
+        List<D.Vertex> points = ImagePointGenerator.generatePointsFromImage(imagePath, step);
 //
-//        List<Point> points = new ArrayList<>();
-//        points.add(p1);
-//        points.add(p2);
-//        points.add(p3);
-//        points.add(p4);
-//        points.add(p5);
-
-        // Tworzenie instancji triangulacji Delaunay
-        DelaunayTriangulation delaunay = new DelaunayTriangulation(points);
-
-        // Triangulacja
-        delaunay.triangulate();
-        List<Triangle> triangles = delaunay.getTriangles();
+        List<D.Triangle> triangles = D.triangulate(points);
         BufferedImage afterTriangulation = ImageIO.read(new File("image3.png"));
         TriangleDrawer tD = new TriangleDrawer();
         tD.drawTriangles(afterTriangulation, triangles, Color.red);
