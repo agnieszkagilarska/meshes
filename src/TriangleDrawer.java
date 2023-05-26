@@ -21,7 +21,7 @@ public class TriangleDrawer {
             double distance2 = Math.sqrt(Math.pow(p3.x - p2.x, 2) + Math.pow(p3.y - p2.y, 2));
             double distance3 = Math.sqrt(Math.pow(p1.x - p3.x, 2) + Math.pow(p1.y - p3.y, 2));
 
-            if (distance1 < 50 && distance2 < 50 && distance3 < 50) {
+            if (distance1 < 70 && distance2 < 70 && distance3 < 70) {
                 int[] xPoints = {(int) Math.round(p1.getX()), (int) Math.round(p2.getX()), (int) Math.round(p3.getX())};
                 int[] yPoints = {(int) Math.round(p1.getY()), (int) Math.round(p2.getY()), (int) Math.round(p3.getY())};
 

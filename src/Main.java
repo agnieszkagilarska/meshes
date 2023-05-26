@@ -10,19 +10,21 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new File("image4.png"));
+            image = ImageIO.read(new File("image.png"));
             Quadtree quadtree = new Quadtree(image);
             BufferedImage segmented = quadtree.segment();
-            ImageIO.write(segmented, "png", new File("segmented.png"));
+            ImageIO.write(segmented, "png", new File("afterQuadtree.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         int step = 7;
         List<Vertex> points = ImagePointGenerator.generatePointsFromImage("image4.png", step);
-        List<Triangle> triangles = D.triangulate(points);
+        List<Triangle> triangles = DelaunayTriangulation.triangulate(points);
         BufferedImage afterTriangulation = ImageIO.read(new File("image4.png"));
         TriangleDrawer tD = new TriangleDrawer();
         tD.drawTriangles(afterTriangulation, triangles, Color.red);
+        FilledMatrix fill = new FilledMatrix();
+        fill.writeToFile("image4.png");
     }
 }

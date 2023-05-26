@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class D {
+public class DelaunayTriangulation {
     public static List<Triangle> triangulate(List<Vertex> vertices) {
         List<Triangle> triangles = new ArrayList<>();
         List<Vertex> selectedVertices = new ArrayList<>();
