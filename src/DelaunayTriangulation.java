@@ -25,7 +25,7 @@ public class DelaunayTriangulation {
     }
 
     private static Triangle createBoundingTriangle(List<Vertex> vertices) {
-
+        int id = 0;
         double minx, miny, maxx, maxy;
         minx = miny = Double.POSITIVE_INFINITY;
         maxx = maxy = Double.NEGATIVE_INFINITY;
@@ -40,14 +40,15 @@ public class DelaunayTriangulation {
         double dx = (maxx - minx) * 10;
         double dy = (maxy - miny) * 10;
 
-        Vertex stv0 = new Vertex(minx - dx, miny - dy * 3);
-        Vertex stv1 = new Vertex(minx - dx, maxy + dy);
-        Vertex stv2 = new Vertex(maxx + dx * 3, maxy + dy);
+        Vertex stv0 = new Vertex(-1,minx - dx, miny - dy * 3);
+        Vertex stv1 = new Vertex(-1, minx - dx, maxy + dy);
+        Vertex stv2 = new Vertex(-1, maxx + dx * 3, maxy + dy);
 
-        return new Triangle(stv0, stv1, stv2);
+        return new Triangle(id, stv0, stv1, stv2);
     }
 
     private static List<Triangle> addVertex(Vertex vertex, List<Triangle> triangles) {
+        int id = 0;
         List<Edge> edges = new ArrayList<>();
         List<Edge> finalEdges = edges;
         triangles.removeIf(triangle -> {
@@ -63,7 +64,8 @@ public class DelaunayTriangulation {
         edges = uniqueEdges(edges);
 
         for (Edge edge : edges) {
-            triangles.add(new Triangle(edge.v0, edge.v1, vertex));
+            triangles.add(new Triangle(id, edge.v0, edge.v1, vertex));
+            id++;
         }
 
         return triangles;

@@ -5,9 +5,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
-public class FilledMatrix {
-    public void writeToFile(String imagePath) throws IOException {
+public class Fill {
+    public void writeMatrixToFile(String imagePath) throws IOException {
         BufferedImage image = ImageIO.read(new File(imagePath));
         int height = image.getHeight();
         int width = image.getWidth();
@@ -33,4 +34,27 @@ public class FilledMatrix {
                 i += 12;
             }
         }
-    }}
+    }
+    public void writeVerticesToFile(List<Vertex> vertices) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("verticesFile.txt"))) {
+            for (Vertex vertex : vertices) {
+                String line = vertex.getId() + ", " + vertex.getX() + ", " + vertex.getY();
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+    }
+    public void writeElementsToFile(List<Triangle> elements) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("elemnts.txt"))) {
+            for (Triangle element : elements) {
+                String line = element.getId() + ", "
+                        + element.getV0().getId() + ", "
+                        + element.getV1().getId() + ", "
+                        + element.getV2().getId() + ", "
+                        + (element.isInsideBlack() ? "1" : "0");
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+    }
+}

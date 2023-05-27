@@ -24,7 +24,9 @@ public class Main {
         BufferedImage afterTriangulation = ImageIO.read(new File("image4.png"));
         TriangleDrawer tD = new TriangleDrawer();
         tD.drawTriangles(afterTriangulation, triangles, Color.red);
-        FilledMatrix fill = new FilledMatrix();
-        fill.writeToFile("image4.png");
+        Fill fill = new Fill();
+        fill.writeMatrixToFile("image4.png");
+        fill.writeVerticesToFile(points);
+        fill.writeElementsToFile(triangles);
     }
 }

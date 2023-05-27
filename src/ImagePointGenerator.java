@@ -11,13 +11,12 @@ public class ImagePointGenerator {
 
     public static List<Vertex> generatePointsFromImage(String imagePath, int step) {
         List<Vertex> points = new ArrayList<>();
-
         try {
             BufferedImage image = ImageIO.read(new File(imagePath));
 
             int width = image.getWidth();
             int height = image.getHeight();
-
+            int id=0;
             // Przetwarzanie pikseli obrazu
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
@@ -26,13 +25,16 @@ public class ImagePointGenerator {
                         // Sprawdzenie czy piksel jest na granicy kształtu
                         if (isBoundaryPixel(image, x, y)) {
                             if (x % step == 0 && y % step == 0) {
-                                points.add(new Vertex(x, y));
+                                points.add(new Vertex(id, x, y,true));
+                                id++;
                             }
                         }
-                        if (x % step == 0 && y % step == 0) {
-                            points.add(new Vertex(x, y));
+                        else if(x % step == 0 && y % step == 0) {
+                            points.add(new Vertex(id,x, y,true));
+                            id++;
                         }
                     }
+
                 }
             }
 
