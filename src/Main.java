@@ -28,6 +28,18 @@ public class Main {
         JMenu imageMenu = new JMenu("Images");
         menuBar.add(imageMenu);
 
+
+        JMenuItem menuItem0 = new JMenuItem("Empty image");
+        menuItem0.addActionListener(e -> {
+            try {
+                displayImage(generateImage0());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        imageMenu.add(menuItem0);
+
+
         JMenuItem menuItem1 = new JMenuItem("QuadTree");
         menuItem1.addActionListener(e -> {
             try {
@@ -48,16 +60,22 @@ public class Main {
         });
         imageMenu.add(menuItem2);
 
-        JButton exportButton = new JButton("Wyeksportuj");
-        exportButton.addActionListener(e -> exportImage());
+        JMenu optionsMenu = new JMenu("Options");
+        menuBar.add(imageMenu);
 
-        JButton addButton = new JButton("Dodaj");
-        addButton.addActionListener(e -> addImage());
+        JMenuItem optionsItem0 = new JMenuItem("Export");
+        menuItem0.addActionListener(e -> {
+            try {
+                displayImage(generateImage0());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        imageMenu.add(menuItem0);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(exportButton);
-        buttonPanel.add(addButton);
+
 
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
@@ -66,6 +84,7 @@ public class Main {
 
         frame.setVisible(true);
     }
+
 
     private static void displayImage(BufferedImage image) {
         JLabel imageLabel = new JLabel(new ImageIcon(image));
@@ -81,16 +100,12 @@ public class Main {
         Quadtree quadtree = new Quadtree(image);
         BufferedImage segmented = quadtree.segment();
         ImageIO.write(segmented, "png", new File("afterQuadtree.png"));
-
-
-
         image = ImageIO.read(new File("afterQuadtree.png"));
-
-
-
-
-
-
+        return image;
+    }
+    private static BufferedImage generateImage0() throws IOException {
+        BufferedImage image;
+        image = ImageIO.read(new File("image4.png"));
         return image;
     }
 
@@ -108,6 +123,8 @@ public class Main {
         fill.writeMatrixToFile("image4.png");
         fill.writeVerticesToFile(points);
         fill.writeElementsToFile(triangles);
+
+        JOptionPane.showMessageDialog(null, "Dane zostały zapisane w postaci macierzy polaczeń.", "Zapisano dane", JOptionPane.INFORMATION_MESSAGE);
 
         return triangulation;
     }
