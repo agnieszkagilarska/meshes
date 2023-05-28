@@ -10,10 +10,12 @@ public class Main {
 
     private static JFrame frame;
     private static BufferedImage originalImage;
-
+    private static BufferedImage currentImage;
+    private static String currentImagePath;
     public static void main(String[] args) throws IOException {
         originalImage = ImageIO.read(new File("image4.png"));
-
+        currentImagePath= "image4.png";
+        currentImage = originalImage;
         SwingUtilities.invokeLater(Main::createAndShowGUI);
     }
 
@@ -29,16 +31,57 @@ public class Main {
         menuBar.add(imageMenu);
 
 
-        JMenuItem menuItem0 = new JMenuItem("Empty image");
-        menuItem0.addActionListener(e -> {
+
+        JMenuItem menuItemOriginal = new JMenuItem("Original Image");
+        menuItemOriginal.addActionListener(e -> {
+            currentImage = originalImage;
+            currentImagePath= "image4.png";
+            displayImage(currentImage);
+        });
+        imageMenu.add(menuItemOriginal);
+
+        JMenuItem menuItemImage1 = new JMenuItem("Image 1");
+        menuItemImage1.addActionListener(e -> {
             try {
-                displayImage(generateImage0());
+                BufferedImage image = ImageIO.read(new File("image1.png"));
+                currentImage = image;
+                currentImagePath= "image1.png";
+                displayImage(currentImage);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        imageMenu.add(menuItem0);
+        imageMenu.add(menuItemImage1);
 
+        JMenuItem menuItemImage2 = new JMenuItem("Image 2");
+        menuItemImage2.addActionListener(e -> {
+            try {
+                BufferedImage image = ImageIO.read(new File("image2.png"));
+                currentImage = image;
+                currentImagePath= "image2.png";
+                displayImage(currentImage);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        imageMenu.add(menuItemImage2);
+
+        JMenuItem menuItemImage3 = new JMenuItem("Image 3");
+        menuItemImage3.addActionListener(e -> {
+            try {
+                BufferedImage image = ImageIO.read(new File("image3.png"));
+                currentImage = image;
+                currentImagePath= "image3.png";
+                displayImage(currentImage);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        imageMenu.add(menuItemImage3);
+
+
+        JMenu meshMenu = new JMenu("Mesh");
+        menuBar.add(meshMenu);
 
         JMenuItem menuItem1 = new JMenuItem("QuadTree");
         menuItem1.addActionListener(e -> {
@@ -48,30 +91,18 @@ public class Main {
                 throw new RuntimeException(ex);
             }
         });
-        imageMenu.add(menuItem1);
+        meshMenu.add(menuItem1);
 
         JMenuItem menuItem2 = new JMenuItem("Triangulation");
-        menuItem2.addActionListener(e -> {
+       menuItem2.addActionListener(e -> {
             try {
                 displayImage(generateImage2());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        imageMenu.add(menuItem2);
+        meshMenu.add(menuItem2);
 
-        JMenu optionsMenu = new JMenu("Options");
-        menuBar.add(imageMenu);
-
-        JMenuItem optionsItem0 = new JMenuItem("Export");
-        menuItem0.addActionListener(e -> {
-            try {
-                displayImage(generateImage0());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        imageMenu.add(menuItem0);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -83,8 +114,75 @@ public class Main {
         displayImage(originalImage);
 
         frame.setVisible(true);
+
+
+        JMenu optionsMenu = new JMenu("Export");
+        menuBar.add(optionsMenu);
+
+        JMenuItem optionsItem0 = new JMenuItem("Matrix 2D");
+        optionsItem0.addActionListener(e -> {
+            try {
+
+               generateMatrix();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        optionsMenu.add(optionsItem0);
+
+
+        JMenuItem optionsItem1 = new JMenuItem("Save Vertices");
+        optionsItem1.addActionListener(e -> {
+            try {
+
+                generateVertex();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        optionsMenu.add(optionsItem1);
+
+        JMenuItem optionsItem2 = new JMenuItem("Save connectivity matrix");
+        optionsItem2.addActionListener(e -> {
+            try {
+
+                generateConnectivityMatrix();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        optionsMenu.add(optionsItem2);
+
+
+
     }
 
+    private static void generateConnectivityMatrix() throws IOException {
+        int step = 7;
+        List<Vertex> points = ImagePointGenerator.generatePointsFromImage(currentImagePath, step);
+        List<Triangle> triangles = DelaunayTriangulation.triangulate(points);
+        Fill fill = new Fill();
+        fill.writeElementsToFile(triangles);
+
+        JOptionPane.showMessageDialog(null, "Dane zostały zapisane w postaci macierzy polaczeń.", "Zapisano dane dla "+ currentImagePath, JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    private static void generateVertex() throws IOException {
+        Fill fill = new Fill();
+        int step = 7;
+        List<Vertex> points = ImagePointGenerator.generatePointsFromImage(currentImagePath, step);
+        fill.writeVerticesToFile(points);
+        JOptionPane.showMessageDialog(null, "Dane zostały zapisane.", "Zapisano dane dla "+ currentImagePath, JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    private static void generateMatrix() throws IOException {
+        Fill fill = new Fill();
+        fill.writeMatrixToFile(currentImagePath);
+        JOptionPane.showMessageDialog(null, "Dane zostały zapisane w postaci macierzy 2D.", "Zapisano dane dla "+ currentImagePath, JOptionPane.INFORMATION_MESSAGE);
+
+    }
 
     private static void displayImage(BufferedImage image) {
         JLabel imageLabel = new JLabel(new ImageIcon(image));
@@ -96,7 +194,7 @@ public class Main {
     private static BufferedImage generateImage1() throws IOException {
 
         BufferedImage image;
-        image = ImageIO.read(new File("image4.png"));
+        image = ImageIO.read(new File(currentImagePath));
         Quadtree quadtree = new Quadtree(image);
         BufferedImage segmented = quadtree.segment();
         ImageIO.write(segmented, "png", new File("afterQuadtree.png"));
@@ -105,26 +203,20 @@ public class Main {
     }
     private static BufferedImage generateImage0() throws IOException {
         BufferedImage image;
-        image = ImageIO.read(new File("image4.png"));
+        image = ImageIO.read(new File(String.valueOf(currentImage)));
         return image;
     }
 
     private static BufferedImage generateImage2() throws IOException {
         int step = 7;
-        List<Vertex> points = ImagePointGenerator.generatePointsFromImage("image4.png", step);
+        List<Vertex> points = ImagePointGenerator.generatePointsFromImage(currentImagePath, step);
         List<Triangle> triangles = DelaunayTriangulation.triangulate(points);
-        BufferedImage afterTriangulation = ImageIO.read(new File("image4.png"));
+        BufferedImage afterTriangulation = ImageIO.read(new File(currentImagePath));
         TriangleDrawer tD = new TriangleDrawer();
         tD.drawTriangles(afterTriangulation, triangles, Color.red);
         BufferedImage triangulation = ImageIO.read(new File("afterTriangulation.png"));
 
 
-        Fill fill = new Fill();
-        fill.writeMatrixToFile("image4.png");
-        fill.writeVerticesToFile(points);
-        fill.writeElementsToFile(triangles);
-
-        JOptionPane.showMessageDialog(null, "Dane zostały zapisane w postaci macierzy polaczeń.", "Zapisano dane", JOptionPane.INFORMATION_MESSAGE);
 
         return triangulation;
     }
