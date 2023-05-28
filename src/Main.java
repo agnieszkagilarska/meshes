@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -13,7 +12,7 @@ public class Main {
     private static BufferedImage originalImage;
 
     public static void main(String[] args) throws IOException {
-        originalImage = ImageIO.read(new File("image.png"));
+        originalImage = ImageIO.read(new File("image4.png"));
 
         SwingUtilities.invokeLater(Main::createAndShowGUI);
     }
@@ -76,19 +75,41 @@ public class Main {
     }
 
     private static BufferedImage generateImage1() throws IOException {
+
         BufferedImage image;
+        image = ImageIO.read(new File("image4.png"));
+        Quadtree quadtree = new Quadtree(image);
+        BufferedImage segmented = quadtree.segment();
+        ImageIO.write(segmented, "png", new File("afterQuadtree.png"));
+
+
+
         image = ImageIO.read(new File("afterQuadtree.png"));
+
+
+
+
+
+
         return image;
     }
 
     private static BufferedImage generateImage2() throws IOException {
         int step = 7;
-        List<Vertex> points = ImagePointGenerator.generatePointsFromImage("afterTriangulation.png", step);
+        List<Vertex> points = ImagePointGenerator.generatePointsFromImage("image4.png", step);
         List<Triangle> triangles = DelaunayTriangulation.triangulate(points);
-        BufferedImage afterTriangulation = ImageIO.read(new File("afterTriangulation.png"));
+        BufferedImage afterTriangulation = ImageIO.read(new File("image4.png"));
         TriangleDrawer tD = new TriangleDrawer();
         tD.drawTriangles(afterTriangulation, triangles, Color.red);
-        return afterTriangulation;
+        BufferedImage triangulation = ImageIO.read(new File("afterTriangulation.png"));
+
+
+        Fill fill = new Fill();
+        fill.writeMatrixToFile("image4.png");
+        fill.writeVerticesToFile(points);
+        fill.writeElementsToFile(triangles);
+
+        return triangulation;
     }
 
     private static void exportImage() {

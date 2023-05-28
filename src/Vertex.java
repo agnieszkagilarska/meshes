@@ -11,6 +11,11 @@ public class Vertex {
         this.id = id;
     }
 
+    public Vertex(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public Vertex(double id, double x, double y, boolean isBlack) {
         this.id = id;
         this.x = x;

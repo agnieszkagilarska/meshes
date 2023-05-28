@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DelaunayTriangulation {
+    private static int id=0;
     public static List<Triangle> triangulate(List<Vertex> vertices) {
         List<Triangle> triangles = new ArrayList<>();
         List<Vertex> selectedVertices = new ArrayList<>();
@@ -25,7 +26,7 @@ public class DelaunayTriangulation {
     }
 
     private static Triangle createBoundingTriangle(List<Vertex> vertices) {
-        int id = 0;
+        int id=0;
         double minx, miny, maxx, maxy;
         minx = miny = Double.POSITIVE_INFINITY;
         maxx = maxy = Double.NEGATIVE_INFINITY;
@@ -41,14 +42,13 @@ public class DelaunayTriangulation {
         double dy = (maxy - miny) * 10;
 
         Vertex stv0 = new Vertex(-1,minx - dx, miny - dy * 3);
-        Vertex stv1 = new Vertex(-1, minx - dx, maxy + dy);
-        Vertex stv2 = new Vertex(-1, maxx + dx * 3, maxy + dy);
+        Vertex stv1 = new Vertex( -1,minx - dx, maxy + dy);
+        Vertex stv2 = new Vertex( -1,maxx + dx * 3, maxy + dy);
 
-        return new Triangle(id, stv0, stv1, stv2);
+        return new Triangle(id,stv0, stv1, stv2);
     }
 
     private static List<Triangle> addVertex(Vertex vertex, List<Triangle> triangles) {
-        int id = 0;
         List<Edge> edges = new ArrayList<>();
         List<Edge> finalEdges = edges;
         triangles.removeIf(triangle -> {
@@ -64,15 +64,14 @@ public class DelaunayTriangulation {
         edges = uniqueEdges(edges);
 
         for (Edge edge : edges) {
-            triangles.add(new Triangle(id, edge.v0, edge.v1, vertex));
-            id++;
+            triangles.add(new Triangle(id++,edge.v0, edge.v1, vertex));
+
         }
 
         return triangles;
     }
 
     private static List<Edge> uniqueEdges(List<Edge> edges) {
-        // TODO: This is O(n^2), make it O(n) with a hash or some such
         List<Edge> uniqueEdges = new ArrayList<>();
         for (int i = 0; i < edges.size(); ++i) {
             Edge edge1 = edges.get(i);
