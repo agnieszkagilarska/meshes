@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Main {
 
+    private static int step = 5 ;
     private static JFrame frame;
     private static BufferedImage originalImage;
     private static BufferedImage currentImage;
@@ -152,13 +153,9 @@ public class Main {
             }
         });
         optionsMenu.add(optionsItem2);
-
-
-
     }
 
     private static void generateConnectivityMatrix() throws IOException {
-        int step = 7;
         List<Vertex> points = ImagePointGenerator.generatePointsFromImage(currentImagePath, step);
         List<Triangle> triangles = DelaunayTriangulation.triangulate(points);
         Fill fill = new Fill();
@@ -170,7 +167,6 @@ public class Main {
 
     private static void generateVertex() throws IOException {
         Fill fill = new Fill();
-        int step = 7;
         List<Vertex> points = ImagePointGenerator.generatePointsFromImage(currentImagePath, step);
         fill.writeVerticesToFile(points);
         JOptionPane.showMessageDialog(null, "Dane zostały zapisane.", "Zapisano dane dla "+ currentImagePath, JOptionPane.INFORMATION_MESSAGE);
@@ -208,7 +204,6 @@ public class Main {
     }
 
     private static BufferedImage generateImage2() throws IOException {
-        int step = 7;
         List<Vertex> points = ImagePointGenerator.generatePointsFromImage(currentImagePath, step);
         List<Triangle> triangles = DelaunayTriangulation.triangulate(points);
         BufferedImage afterTriangulation = ImageIO.read(new File(currentImagePath));

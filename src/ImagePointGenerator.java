@@ -16,7 +16,7 @@ public class ImagePointGenerator {
 
             int width = image.getWidth();
             int height = image.getHeight();
-            int id=0;
+            int id = 0;
             // Przetwarzanie pikseli obrazu
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
@@ -24,20 +24,18 @@ public class ImagePointGenerator {
                     if (image.getRGB(x, y) == BLACK_COLOR) {
                         // Sprawdzenie czy piksel jest na granicy kształtu
                         if (isBoundaryPixel(image, x, y)) {
-                            if (x % step == 0 && y % step == 0) {
-                                points.add(new Vertex(id, x, y,true));
-                                id++;
-                            }
-                        }
-                        else if(x % step == 0 && y % step == 0) {
-                            points.add(new Vertex(id,x, y,true));
+                            points.add(new Vertex(id, x, y, true));
                             id++;
                         }
+                        if (x % step == 0 && y % step == 0) {
+                            points.add(new Vertex(id, x, y, true));
+                            id++;
+                        }
+
                     }
-
                 }
-            }
 
+            }
             return points;
         } catch (IOException e) {
             throw new RuntimeException(e);
